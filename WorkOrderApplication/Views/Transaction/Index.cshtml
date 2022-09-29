@@ -1,0 +1,76 @@
+﻿@model IEnumerable<WorkOrderCore.Model.JobcardTransactionsViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a class="btn btn-success" asp-action="Create">Create Transaction</a>
+
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Job Name
+            </th>
+            <th>
+                Transaction Start Date
+            </th>
+            <th>
+                Transaction End Date
+            </th>
+            <th>
+                Transaction Status
+            </th>
+            <th>
+                Transaction Close At
+            </th>
+            <th>
+                Assigned Employee
+            </th>
+            <th>
+                Priority
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.JobName
+                </td>
+                <td>
+                    @item.JobCardsTransactionsStartDate.ToString("dddd, dd MMMM yyyy")
+                </td>
+                <td>
+                    @item.JobCardsTransactionsEndDate.ToString("dddd, dd MMMM yyyy")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JobCardsTransactionsStatus)
+                </td>
+                <td>
+                    @if (item.JobCardsTransactionsClosedAt != null)
+                    {
+                        @item.JobCardsTransactionsClosedAt.Value.ToString("dddd, dd MMMM yyyy")
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EmployeeFullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrioritySequence)
+                </td>
+                <td>
+                    <a class="btn btn-success" asp-action="Create" asp-route-id="@item.Id" asp-route-viewType="edit">Edit</a>
+                    @*<a class="btn btn-warning" asp-action="Details">Details</a>*@
+                    @*<a class="btn btn-danger" asp-action="Delete">Delete</a>*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

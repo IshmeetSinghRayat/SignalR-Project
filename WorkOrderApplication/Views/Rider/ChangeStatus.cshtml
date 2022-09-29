@@ -1,0 +1,55 @@
+﻿@model List<WorkOrderCore.Infrastructure.Persistence.DataContext.Lookups>
+
+@{
+    ViewData["Title"] = "ChangeStatus"; 
+    Layout = "/Views/Shared/_ClientLayout.csHtml";
+
+}
+
+<div class="row">
+    <h2>Change Transaction Status</h2>
+
+    <div class="col-md-4">
+        <a class="btn btn-warning" asp-action="Index" style="float:right">Back</a>
+    </div>
+</div>
+<hr />
+    <div class="row">
+        <div class="col-md-4">
+            <div class="list-group">
+                @foreach (var item in Model)
+                {
+                    <a class="list-group-item list-group-item-action" onclick="TakeAction('@item.Alias','@ViewBag.TransactionId')" id="@item.Alias" style="cursor:pointer">
+                        @item.Name
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+    $(function () {
+        $("#" + '@ViewBag.currentStatus').addClass("active");
+    })
+    function TakeAction(value, transactionId) {
+        $(".list-group a.active").removeClass('active');
+        $("#" + value).addClass("active");
+        var URL = '@Url.Action("ChangeTransactionStatus", "Rider")';
+        $.ajax({
+            type: "POST",
+            url: URL,
+            data: { id: transactionId, status: value},
+            success: function () {
+                window.location.href = '@Url.Action("Index", "Rider")';
+            },
+            error: function (passParams) {
+                console.log(passParams);
+            }
+        });
+    }
+</script>
+    }

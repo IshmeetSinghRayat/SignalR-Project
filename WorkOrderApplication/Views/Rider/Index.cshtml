@@ -1,0 +1,97 @@
+﻿@model List<WorkOrderCore.Model.JobcardTransactionsViewModel>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "/Views/Shared/_ClientLayout.csHtml";
+
+}
+<style>
+    .fontSize {
+        font-weight: bold;
+        font-size: 20px;
+    }
+
+    .marginWithFontSize {
+        margin-bottom: 13px;
+        font-size: 16px;
+    }
+
+    .rightBorderSolid {
+        border-right: 1px solid darkgrey;
+    }
+
+    .dataStyle {
+        border: 1px solid #eaeaea;
+        padding: 26px;
+    }
+
+    .padding-14 {
+        padding-bottom: 14px;
+    }
+
+    .btnShowAttachments {
+        background-color: #c39292
+    }
+
+    .btnAddAttachments {
+        background-color: #ffaaf2
+    }
+
+    .btnSettingsAttachments {
+        background-color: #b5b5b5
+    }
+    .btnShowDetails {
+        background-color: #ecc91e
+    }
+</style>
+<div class="row">
+    <h2>My Activities</h2>
+
+    <div class="col-md-12">
+        <button type="button" class="btn btn-warning" onClick="window.location.reload();" style="float:right">Reload</button>
+    </div>
+</div>
+<hr />
+@foreach (var item in Model)
+{
+    if (item.EmployeeTransactionStatus != "Finished")
+    {
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border">
+                @item.JobNumber - @item.ActivityName
+            </legend>
+            <span style="float: right;">
+                @item.JobCardsTransactionsStatus
+            </span>
+            <div class="row" style="margin:1px">
+                <div class="col-md-6 col-xs-6 rightBorderSolid">
+                    <label>Start Date</label>
+                    <br />
+                    @item.JobCardsTransactionsStartDate.ToString("dddd, dd MMMM yyyy")
+                </div>
+                <div class="col-md-6 col-xs-6">
+                    <label>End Date</label>
+                    <br />
+                    @item.JobCardsTransactionsEndDate.ToString("dddd, dd MMMM yyyy")
+                </div>
+            </div>
+            <br />
+            <div class="row" style="margin:1px">
+                @if (item.EmployeeTransactionStatus == "Active")
+                {
+                    <div class="col-md-3 col-sm-3 col-xs-3 list-group">
+                        <a asp-action="ChangeStatus" asp-route-Id="@item.Id" class="btn btn-sm list-group-item list-group-item-action btnSettingsAttachments"><i class="fa fa-wrench"></i></a>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-3 list-group">
+                        <a asp-action="AddAttachment" asp-route-TransactionId="@item.Id" class="btn btn-sm list-group-item list-group-item-action btnAddAttachments"><i class="fa fa-upload" aria-hidden="true"></i> </a>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-xs-3 list-group">
+                        <a asp-action="ShowAttachment" asp-route-TransactionId="@item.Id" class="btn btn-sm list-group-item list-group-item-action btnShowAttachments"><i class="fa fa-low-vision"></i></a>
+                    </div>
+                }
+                <div class="col-md-3 col-sm-3 col-xs-3 list-group">
+                    <a asp-action="ShowDetails" asp-route-TransactionId="@item.Id" class="btn btn-sm list-group-item list-group-item-action btnShowDetails"><i class="fa fa-low-vision"></i></a>
+                </div>
+            </div>
+        </fieldset>
+    }
+}

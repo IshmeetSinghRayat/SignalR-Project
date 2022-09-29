@@ -1,0 +1,65 @@
+﻿@model IEnumerable<WorkOrderCore.Infrastructure.Persistence.DataContext.JobCards>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Job Cards</h2>
+
+<p>
+    <a class="btn btn-success" asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Job Number
+            </th>
+            <th>
+                Business Unit Name
+            </th>
+            <th>
+                Job Description
+            </th>
+            <th>
+                Job Duration
+            </th>
+            <th>
+                Job Status
+            </th>
+            <th>
+                Creation Date
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BuninessUnit.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobDuration) Days
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.JobStatus)
+            </td>
+            <td>
+                @item.CreationDate.ToString("dddd, dd MMMM yyyy")
+            </td>
+            <td>
+                <a class="btn btn-success" asp-action="Create" asp-route-viewType="edit" asp-route-id="@item.Id">Edit</a>
+                @*<a class="btn btn-danger" asp-action="Delete">Delete</a>*@
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

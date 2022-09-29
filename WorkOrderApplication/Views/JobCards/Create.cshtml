@@ -1,0 +1,125 @@
+﻿@model WorkOrderApplication.Models.CreateJobCardViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+<style>
+    .customPostFixDiv {
+        border: 1px solid gray;
+        border-radius: 6px;
+        padding-top: 6px;
+        padding-right: 6px;
+        padding-left: 6px;
+        color: white;
+        background-color: gray;
+    }
+</style>
+
+
+<h2>Job Card</h2>
+
+<div class="alert alert-danger" role="alert" id="errorMessageDuplicateNumber" style="display:none">
+    Job Card is already created with this number, please try with unique one.
+</div>
+
+
+<div class="row">
+    <div class="col-lg-6">
+    </div>
+    <div class="col-lg-6">
+        <a class="btn btn-warning" asp-action="Index" style="float:right">Back to List</a>
+    </div>
+    <form asp-action="Create">
+        <input type="hidden" asp-for="JobCardDetails.Id" />
+        <input type="hidden" asp-for="JobCardDetails.CreationDate" />
+        <input type="hidden" asp-for="JobCardDetails.CreatedBy" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label class="control-label">Job Number</label>
+
+                <div style="display:flex;">
+                    @if ("create" == ViewBag.viewType)
+                    {
+                        <input type="text" asp-for="JobCardDetails.JobNumber" class="form-control" onkeypress="return isNumberKey(this, event)" onchange="fn_checkIfNumberExist(this.value)">
+                        <div class="customPostFixDiv">
+                            @ViewBag.CurrentYear
+                        </div>
+                    }
+                    else
+                    {
+                        <input type="hidden" asp-for="JobCardDetails.JobNumber" />
+                        <label class="badge badge-primary">@Model.JobCardDetails.JobNumber</label>
+                    }
+                </div>
+                <span asp-validation-for="JobCardDetails.JobNumber" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="form-group">
+                <label class="control-label">Buniness Unit</label>
+                <select asp-for="JobCardDetails.BuninessUnitId" asp-items="@Model.BusinessUnitsDD" class="form-control" required>
+                    <option selected disabled>--Select Business Unit--</option>
+                </select>
+                <span asp-validation-for="JobCardDetails.BuninessUnitId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="form-group">
+                <label class="control-label">Job Status</label>
+                <select asp-for="JobCardDetails.JobStatus" asp-items="@Model.StatusDD" class="form-control" required>
+                    <option selected disabled>--Select Status--</option>
+                </select>
+                <span asp-validation-for="JobCardDetails.JobStatus" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label">Job Description</label>
+                <input asp-for="JobCardDetails.JobDescription" class="form-control" required />
+                <span asp-validation-for="JobCardDetails.JobDescription" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label class="control-label">Job Duration</label>
+                <select asp-for="JobCardDetails.JobDuration" asp-items="@Model.DurationDD" class="form-control" required>
+                    <option selected disabled>--Select Status--</option>
+                </select>
+                <span asp-validation-for="JobCardDetails.JobDuration" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="form-group">
+                <label class="control-label">Job Cards Remarks</label>
+                <input asp-for="JobCardDetails.JobCardsRemarks" class="form-control" style="height: 87px;" required />
+                <span asp-validation-for="JobCardDetails.JobCardsRemarks" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-group" style="float:right">
+                <input type="submit" value="Save" class="btn btn-success" />
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+    function fn_checkIfNumberExist(value) {
+        $.get("@Url.Action("CheckDuplicateJobNumber", "JobCards")?number=" + value, function (data) {
+            if (data.success == true) {
+                $("#errorMessageDuplicateNumber").show();
+                $("#JobCardDetails_JobNumber").val("");
+            } else {
+                $("#errorMessageDuplicateNumber").hide();
+            }
+        }).fail(function () {
+            alert("fail");
+        });
+    }
+    </script>
+}
